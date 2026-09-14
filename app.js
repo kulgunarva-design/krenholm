@@ -55,6 +55,7 @@ if(historyNote){
  historyNote.addEventListener("pointerenter",e=>{if(e.pointerType==="mouse"){clearTimeout(closeTimer);showHistory(true);}});
  historyNote.addEventListener("pointerleave",e=>{if(e.pointerType==="mouse"&&!pinned)closeTimer=setTimeout(()=>showHistory(false),350);});
  trigger.addEventListener("click",()=>{clearTimeout(closeTimer);pinned=!pinned;showHistory(pinned);});
+ historyNote.querySelector(".history-close").addEventListener("click",()=>{clearTimeout(closeTimer);pinned=false;showHistory(false);trigger.focus();});
  historyNote.addEventListener("keydown",e=>{if(e.key==="Escape"){clearTimeout(closeTimer);pinned=false;showHistory(false);trigger.focus();}});
  document.addEventListener("click",e=>{if(!historyNote.contains(e.target)){clearTimeout(closeTimer);pinned=false;showHistory(false);}});
 }
