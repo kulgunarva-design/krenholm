@@ -8,3 +8,15 @@ function openPhoto(i){current=i;showPhoto();box.showModal();document.body.style.
 function step(n){current=(current+n+album.length)%album.length;showPhoto()}
 box.querySelector('.close').onclick=()=>box.close();box.querySelector('.prev').onclick=()=>step(-1);box.querySelector('.next').onclick=()=>step(1);box.addEventListener('close',()=>document.body.style.overflow='');box.addEventListener('click',e=>{if(e.target===box)box.close()});box.addEventListener('keydown',e=>{if(e.key==='ArrowRight'){e.preventDefault();step(1)}if(e.key==='ArrowLeft'){e.preventDefault();step(-1)}});
 const details=document.querySelector('#contact-details');if(siteConfig.email||siteConfig.phone||siteConfig.address){details.replaceChildren();for(const [key,prefix] of [['email','mailto:'],['phone','tel:'],['address','']]){if(!siteConfig[key])continue;const el=document.createElement(prefix?'a':'p');el.textContent=siteConfig[key];if(prefix)el.href=prefix+siteConfig[key];details.append(el)}}
+
+const heroFlip=document.querySelector(".hero-flip");
+if(heroFlip){
+ const era=document.querySelector(".hero-era");
+ const setHeroFace=shown=>{heroFlip.classList.toggle("is-flipped",shown);heroFlip.setAttribute("aria-pressed",String(shown));heroFlip.querySelector(".hero-front").setAttribute("aria-hidden",String(shown));heroFlip.querySelector(".hero-back").setAttribute("aria-hidden",String(!shown));era.textContent=shown?era.dataset.present:era.dataset.past;};
+ heroFlip.addEventListener("pointerenter",e=>{if(e.pointerType==="mouse")setHeroFace(true);});
+ heroFlip.addEventListener("pointerleave",e=>{if(e.pointerType==="mouse")setHeroFace(false);});
+ heroFlip.addEventListener("click",()=>setHeroFace(!heroFlip.classList.contains("is-flipped")));
+ heroFlip.addEventListener("keydown",e=>{if(e.key==="Escape")setHeroFace(false);});
+ heroFlip.addEventListener("blur",()=>setHeroFace(false));
+}
+
