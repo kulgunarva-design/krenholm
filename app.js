@@ -46,3 +46,16 @@ if(heroFlip){
  heroFlip.addEventListener("blur",()=>setHeroFace(false));
 }
 
+
+const historyNote=document.querySelector(".history-disclosure");
+if(historyNote){
+ const trigger=historyNote.querySelector(".history-toggle"),panel=historyNote.querySelector(".history-reveal");
+ let pinned=false,closeTimer;
+ const showHistory=open=>{historyNote.classList.toggle("is-open",open);trigger.setAttribute("aria-expanded",String(open));panel.inert=!open;};
+ historyNote.addEventListener("pointerenter",e=>{if(e.pointerType==="mouse"){clearTimeout(closeTimer);showHistory(true);}});
+ historyNote.addEventListener("pointerleave",e=>{if(e.pointerType==="mouse"&&!pinned)closeTimer=setTimeout(()=>showHistory(false),350);});
+ trigger.addEventListener("click",()=>{clearTimeout(closeTimer);pinned=!pinned;showHistory(pinned);});
+ historyNote.addEventListener("keydown",e=>{if(e.key==="Escape"){clearTimeout(closeTimer);pinned=false;showHistory(false);trigger.focus();}});
+ document.addEventListener("click",e=>{if(!historyNote.contains(e.target)){clearTimeout(closeTimer);pinned=false;showHistory(false);}});
+}
+
