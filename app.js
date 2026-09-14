@@ -12,6 +12,32 @@ const details=document.querySelector('#contact-details');if(siteConfig.email||si
 const heroFlip=document.querySelector(".hero-flip");
 if(heroFlip){
  const era=document.querySelector(".hero-era");
+ const modern=heroFlip.querySelector('.hero-back');
+ const masonry=document.createElement('span');
+ masonry.className='hero-masonry';masonry.setAttribute('aria-hidden','true');
+ heroFlip.querySelector('.hero-flip-inner').append(masonry);
+ const drawBricks=()=>{
+  if(!modern.naturalWidth)return;
+  const width=heroFlip.clientWidth,height=heroFlip.clientHeight;
+  if(!width||!height)return;
+  const columns=6,brickWidth=width/columns,rows=Math.ceil(height/(brickWidth*.48)),brickHeight=height/rows;
+  const scale=Math.max(width/modern.naturalWidth,height/modern.naturalHeight);
+  const imageWidth=modern.naturalWidth*scale,imageHeight=modern.naturalHeight*scale;
+  const offsetX=(width-imageWidth)/2,offsetY=(height-imageHeight)*.4;
+  const fragment=document.createDocumentFragment();
+  for(let row=0;row<rows;row++)for(let col=0;col<columns+(row%2);col++){
+   const left=Math.max(0,(col-(row%2)*.5)*brickWidth),right=Math.min(width,(col+1-(row%2)*.5)*brickWidth),top=row*brickHeight;
+   const brick=document.createElement('span');brick.className='hero-brick';
+   const phase=(left/width*.55+row/Math.max(1,rows-1)*.45);
+   Object.assign(brick.style,{left:left+'px',top:top+'px',width:(right-left+.35)+'px',height:(brickHeight+.35)+'px',backgroundImage:'url("'+modern.src+'")',backgroundSize:imageWidth+'px '+imageHeight+'px',backgroundPosition:(offsetX-left)+'px '+(offsetY-top)+'px'});
+   brick.style.setProperty('--reveal-delay',Math.round(phase*1500)+'ms');
+   brick.style.setProperty('--return-delay',Math.round((1-phase)*1000)+'ms');
+   fragment.append(brick);
+  }
+  masonry.replaceChildren(fragment);heroFlip.classList.add('has-bricks');
+ };
+ modern.addEventListener('load',drawBricks);drawBricks();
+ new ResizeObserver(drawBricks).observe(heroFlip);
  const setHeroFace=shown=>{heroFlip.classList.toggle("is-flipped",shown);heroFlip.setAttribute("aria-pressed",String(shown));heroFlip.querySelector(".hero-front").setAttribute("aria-hidden",String(shown));heroFlip.querySelector(".hero-back").setAttribute("aria-hidden",String(!shown));era.textContent=shown?era.dataset.present:era.dataset.past;};
  heroFlip.addEventListener("pointerenter",e=>{if(e.pointerType==="mouse")setHeroFace(true);});
  heroFlip.addEventListener("pointerleave",e=>{if(e.pointerType==="mouse")setHeroFace(false);});

@@ -14,3 +14,11 @@ header{flex-wrap:wrap}header nav{margin-left:auto}.languages{display:flex;gap:6p
 /* Archive / present-day photograph flip. */
 .hero-flip{position:absolute;inset:0;width:100%;height:100%;border:0;padding:0;background:transparent;perspective:1400px;color:inherit}.hero-flip-inner{display:block;position:absolute;inset:0;transform-style:preserve-3d;transition:transform .7s ease}.hero-flip img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;backface-visibility:hidden;-webkit-backface-visibility:hidden;filter:none}.hero-flip .hero-back{transform:rotateY(180deg);object-position:center 40%}.hero-flip.is-flipped .hero-flip-inner{transform:rotateY(180deg)}.hero-image figcaption{pointer-events:none}.hero-flip:focus-visible{outline:3px solid var(--paper);outline-offset:-6px}@media(prefers-reduced-motion:reduce){.hero-flip-inner{transition:none}}
 
+
+/* Staggered brickwork reveal from archive to today. */
+.hero-flip-inner,.hero-flip.is-flipped .hero-flip-inner{transform:none;transform-style:flat;transition:none}.hero-flip .hero-back{transform:none;opacity:0;transition:opacity .35s}.hero-flip.is-flipped .hero-back{opacity:1}.hero-flip.has-bricks .hero-back{opacity:0}.hero-masonry{position:absolute;inset:0;overflow:hidden;pointer-events:none}.hero-brick{position:absolute;display:block;background-repeat:no-repeat;opacity:0;transform:scale(.94);filter:sepia(.6);transition:opacity .42s ease,transform .55s cubic-bezier(.2,.65,.3,1),filter .55s ease;transition-delay:var(--return-delay)}.is-flipped .hero-brick{opacity:1;transform:scale(1);filter:sepia(0);transition-delay:var(--reveal-delay)}@media(prefers-reduced-motion:reduce){.hero-brick,.hero-flip .hero-back{transition:none;transition-delay:0s;transform:none;filter:none}}
+
+
+/* Slower brick reveal; gallery images without visible captions. */
+.hero-brick{transition-duration:.85s,1.1s,1.1s}.photo-label,#photo-caption{display:none}@media(prefers-reduced-motion:reduce){.hero-brick{transition:none}}
+
