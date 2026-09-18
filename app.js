@@ -2,12 +2,33 @@ const grid=document.querySelector('#gallery-grid');
 const order=[9,10,0,6,2,3,4,5,7,8,11,12,1];
 const album=order.map(i=>photos[i]);
 album.forEach((p,i)=>{const b=document.createElement('button');b.className='photo';b.setAttribute('aria-label',({et:'Ava: ',ru:'Открыть: ',en:'Open: '}[document.documentElement.lang]||'Ava: ')+p.caption);const img=document.createElement('img');img.src=p.src;img.alt=p.caption;img.loading='lazy';const label=document.createElement('span');label.className='photo-label';label.textContent=p.caption;const n=document.createElement('span');n.textContent=String(i+1).padStart(2,'0');label.append(n);b.append(img,label);b.onclick=()=>openPhoto(i);grid.append(b)});
-const box=document.querySelector('#lightbox');let current=0;
-function showPhoto(){const p=album[current];document.querySelector('#large-photo').src=p.src;document.querySelector('#large-photo').alt=p.caption;document.querySelector('#photo-caption').textContent=p.caption+' · '+(current+1)+' / '+album.length;}
-function openPhoto(i){current=i;showPhoto();box.showModal();document.body.style.overflow='hidden';}
-function step(n){current=(current+n+album.length)%album.length;showPhoto()}
+const box=document.querySelector('#lightbox');let current=0,activeAlbum=album;
+function showPhoto(){const p=activeAlbum[current];document.querySelector('#large-photo').src=p.src;document.querySelector('#large-photo').alt=p.caption;document.querySelector('#photo-caption').textContent=p.caption+' · '+(current+1)+' / '+activeAlbum.length;}
+function openPhoto(i,collection=album){activeAlbum=collection;current=i;showPhoto();box.showModal();document.body.style.overflow='hidden';}
+function step(n){current=(current+n+activeAlbum.length)%activeAlbum.length;showPhoto()}
 box.querySelector('.close').onclick=()=>box.close();box.querySelector('.prev').onclick=()=>step(-1);box.querySelector('.next').onclick=()=>step(1);box.addEventListener('close',()=>document.body.style.overflow='');box.addEventListener('click',e=>{if(e.target===box)box.close()});box.addEventListener('keydown',e=>{if(e.key==='ArrowRight'){e.preventDefault();step(1)}if(e.key==='ArrowLeft'){e.preventDefault();step(-1)}});
-const details=document.querySelector('#contact-details');if(siteConfig.email||siteConfig.phone||siteConfig.address){details.replaceChildren();for(const [key,prefix] of [['email','mailto:'],['phone','tel:'],['address','']]){if(!siteConfig[key])continue;const el=document.createElement(prefix?'a':'p');el.textContent=siteConfig[key];if(prefix)el.href=prefix+siteConfig[key];details.append(el)}}
+const renovationGrid=document.querySelector('#renovation-grid');
+if(renovationGrid){
+ const captions={
+  et:['Katuse ja tellismüüritise detail','Telliskorstna seisukord','Katuse ja korstna ühenduskoht','Telliskorstna lähivaade','Korstna müüritise detail','Fassaadi ja vihmaveetoru detail','Korstna üldvaade','Katuse ja korstna vaade','Korstna remondi detail','Vana tellismüüritis','Fassaadi tellisdetail'],
+  ru:['Деталь кровли и кирпичной кладки','Состояние кирпичной трубы','Примыкание кровли к трубе','Кирпичная труба крупным планом','Деталь кладки трубы','Фасад и водосточная труба','Общий вид трубы','Вид кровли и трубы','Деталь ремонта трубы','Старая кирпичная кладка','Деталь кирпичного фасада'],
+  en:['Roof and brickwork detail','Condition of a brick chimney','Roof and chimney junction','Close view of a brick chimney','Chimney masonry detail','Facade and downpipe detail','Full view of the chimney','Roof and chimney view','Chimney repair detail','Historic brickwork','Brick facade detail']
+ };
+ const names=['IMG_2536','IMG_2620','IMG_2621','IMG_2623','IMG_2624','IMG_2710','IMG_4561','IMG_5125','IMG_5127','IMG_5131','IMG_5133'];
+ const lang=document.documentElement.lang,labels=captions[lang]||captions.et;
+ const renovationAlbum=names.map((name,i)=>({src:'img/renov/web/'+name+'.webp',caption:labels[i]}));
+ renovationAlbum.forEach((p,i)=>{
+  const button=document.createElement('button');button.type='button';button.className='renovation-photo';
+  button.setAttribute('aria-label',({et:'Ava foto: ',ru:'Открыть фото: ',en:'Open photo: '}[lang]||'Ava foto: ')+p.caption);
+  const img=document.createElement('img');img.src=p.src;img.alt=p.caption;img.loading='lazy';img.decoding='async';
+  button.append(img);button.addEventListener('click',()=>openPhoto(i,renovationAlbum));renovationGrid.append(button);
+ });
+}
+const details=document.querySelector('#contact-details');if(details){
+ details.replaceChildren();
+ for(const [key,prefix] of [['email','mailto:'],['phone','tel:']]){if(!siteConfig[key])continue;const el=document.createElement('a');el.href=prefix+siteConfig[key];el.textContent=siteConfig[key];details.append(el)}
+ for(const [key,className] of [['contactName','contact-person'],['contactRole','contact-role'],['address','contact-address']]){if(!siteConfig[key]||(key==='address'&&document.documentElement.lang==='en'))continue;const el=document.createElement('p');el.className=className;el.textContent=key==='contactRole'&&document.documentElement.lang==='en'?siteConfig.contactRoleEn:siteConfig[key];details.append(el)}
+}
 
 const heroFlip=document.querySelector(".hero-flip");
 if(heroFlip){
