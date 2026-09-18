@@ -27,7 +27,7 @@ if(renovationGrid){
 const details=document.querySelector('#contact-details');if(details){
  details.replaceChildren();
  for(const [key,prefix] of [['email','mailto:'],['phone','tel:']]){if(!siteConfig[key])continue;const el=document.createElement('a');el.href=prefix+siteConfig[key];el.textContent=siteConfig[key];details.append(el)}
- for(const [key,className] of [['contactName','contact-person'],['contactRole','contact-role'],['address','contact-address']]){if(!siteConfig[key]||(key==='address'&&document.documentElement.lang==='en'))continue;const el=document.createElement('p');el.className=className;el.textContent=key==='contactRole'&&document.documentElement.lang==='en'?siteConfig.contactRoleEn:siteConfig[key];details.append(el)}
+ for(const [key,className] of [['contactName','contact-person'],['contactRole','contact-role']]){if(!siteConfig[key])continue;const el=document.createElement('p');el.className=className;el.textContent=key==='contactRole'?(document.documentElement.lang==='en'?siteConfig.contactRoleEn:document.documentElement.lang==='ru'?siteConfig.contactRoleRu:siteConfig.contactRole):siteConfig[key];details.append(el)}
 }
 
 const heroFlip=document.querySelector(".hero-flip");
