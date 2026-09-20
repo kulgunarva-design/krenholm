@@ -1,6 +1,7 @@
 const grid=document.querySelector('#gallery-grid');
 const order=[9,10,0,6,2,3,4,5,7,8,11,12,1];
 const album=order.map(i=>photos[i]);
+if(grid)grid.replaceChildren();
 if(grid)album.forEach((p,i)=>{const b=document.createElement('button');b.className='photo';b.setAttribute('aria-label',({et:'Ava: ',ru:'Открыть: ',en:'Open: '}[document.documentElement.lang]||'Ava: ')+p.caption);const img=document.createElement('img');img.src=p.src;img.alt=p.caption;img.loading='lazy';const label=document.createElement('span');label.className='photo-label';label.textContent=p.caption;const n=document.createElement('span');n.textContent=String(i+1).padStart(2,'0');label.append(n);b.append(img,label);b.onclick=()=>openPhoto(i);grid.append(b)});
 const box=document.querySelector('#lightbox');let current=0,activeAlbum=album;
 function showPhoto(){const p=activeAlbum[current];document.querySelector('#large-photo').src=p.src;document.querySelector('#large-photo').alt=p.caption;document.querySelector('#photo-caption').textContent=p.caption+' · '+(current+1)+' / '+activeAlbum.length;}
@@ -9,6 +10,7 @@ function step(n){current=(current+n+activeAlbum.length)%activeAlbum.length;showP
 box.querySelector('.close').onclick=()=>box.close();box.querySelector('.prev').onclick=()=>step(-1);box.querySelector('.next').onclick=()=>step(1);box.addEventListener('close',()=>document.body.style.overflow='');box.addEventListener('click',e=>{if(e.target===box)box.close()});box.addEventListener('keydown',e=>{if(e.key==='ArrowRight'){e.preventDefault();step(1)}if(e.key==='ArrowLeft'){e.preventDefault();step(-1)}});
 const renovationGrid=document.querySelector('#renovation-grid');
 if(renovationGrid){
+ renovationGrid.replaceChildren();
  const captions={
   et:['Katuse ja tellismüüritise detail','Telliskorstna seisukord','Katuse ja korstna ühenduskoht','Telliskorstna lähivaade','Korstna müüritise detail','Fassaadi ja vihmaveetoru detail','Korstna üldvaade','Katuse ja korstna vaade','Korstna remondi detail','Vana tellismüüritis','Fassaadi tellisdetail'],
   ru:['Деталь кровли и кирпичной кладки','Состояние кирпичной трубы','Примыкание кровли к трубе','Кирпичная труба крупным планом','Деталь кладки трубы','Фасад и водосточная труба','Общий вид трубы','Вид кровли и трубы','Деталь ремонта трубы','Старая кирпичная кладка','Деталь кирпичного фасада'],
